@@ -14,6 +14,8 @@ import { getCurrentUser, requestAccessToken } from "@/lib/spotify";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import ErrorCard from "@/components/error-card";
 
+type SearchParams = Promise<{ code: string; error: string; state: string }>;
+
 const ERRORS: { [key: string]: { title: string; message: string } } = {
   access_denied: {
     title: "Authentication cancelled",
@@ -23,10 +25,12 @@ const ERRORS: { [key: string]: { title: string; message: string } } = {
 };
 
 export default async function LinkAccountPage({
-  searchParams: { code, error, state },
+  searchParams,
 }: {
-  searchParams: { code: string; error: string; state: string };
+  searchParams: SearchParams;
 }) {
+  const { code, error, state } = await searchParams;
+
   // Redirect lost users to homepage
   if (!state) redirect("https://spoticord.com");
 
@@ -105,8 +109,8 @@ export default async function LinkAccountPage({
           className="contents p-0 md:grid [&>div:first-child]:hidden md:[&>div:first-child]:block"
           color={["#444444", "#444444"]}
         >
-          <Card className="flex min-h-full w-full flex-col rounded-none md:min-h-[auto] md:max-w-md md:rounded-md">
-            <CardHeader className="flex items-center gap-4 bg-muted p-6">
+          <Card className="md:min-h-auto flex min-h-full w-full flex-col rounded-none md:max-w-md md:rounded-md">
+            <CardHeader className="bg-muted flex items-center gap-4 p-6">
               {/* Images */}
               <div className="relative flex w-full flex-row justify-center px-16">
                 <div className="size-12 md:size-16"></div>
@@ -125,7 +129,7 @@ export default async function LinkAccountPage({
                   <CheckIcon className="mr-2 size-6 text-green-500" />
                   Successfully linked account
                 </div>
-                <p className="text-xs text-muted-foreground md:text-sm">
+                <p className="text-muted-foreground text-xs md:text-sm">
                   Your Spotify account has successfully been linked to
                   Spoticord.
                 </p>
@@ -136,7 +140,7 @@ export default async function LinkAccountPage({
                 <div className="text-sm font-medium md:text-base">
                   Time to fire up those tunes
                 </div>
-                <p className="mt-2 text-sm text-muted-foreground md:text-base">
+                <p className="text-muted-foreground mt-2 text-sm md:text-base">
                   You may now close this page and return to Discord.
                   <br />
                   Use the <code>/join</code> command to start start using
@@ -151,7 +155,7 @@ export default async function LinkAccountPage({
                   <div className="text-xs font-medium md:text-sm">
                     See what is being listened to
                   </div>
-                  <p className="text-xs text-muted-foreground md:text-sm">
+                  <p className="text-muted-foreground text-xs md:text-sm">
                     Somebody else using the bot? Use the <code>/playing</code>{" "}
                     command to see what they&apos;re listening to!
                   </p>
@@ -161,7 +165,7 @@ export default async function LinkAccountPage({
                   <div className="text-xs font-medium md:text-sm">
                     Doing a karaoke session?
                   </div>
-                  <p className="text-xs text-muted-foreground md:text-sm">
+                  <p className="text-muted-foreground text-xs md:text-sm">
                     Use the <code>/lyrics</code> command to see the (live
                     updating!) lyrics for the song that is being played, as long
                     as lyrics are available.
@@ -172,7 +176,7 @@ export default async function LinkAccountPage({
                   <div className="text-xs font-medium md:text-sm">
                     Want to be extra fancy?
                   </div>
-                  <p className="text-xs text-muted-foreground md:text-sm">
+                  <p className="text-muted-foreground text-xs md:text-sm">
                     Rename your Spoticord device using the <code>/rename</code>{" "}
                     command, which will give the &quot;speaker&quot; in your
                     Spotify your newly given name!

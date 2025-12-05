@@ -11,7 +11,6 @@ export const accounts = pgTable("account", {
   username: varchar("username").notNull(),
   access_token: varchar("access_token").notNull(),
   refresh_token: varchar("refresh_token").notNull(),
-  session_token: varchar("session_token"),
   expires: timestamp("expires").notNull(),
   last_updated: timestamp("last_updated").notNull().defaultNow(),
 });

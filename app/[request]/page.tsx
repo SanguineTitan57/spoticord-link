@@ -18,11 +18,11 @@ import { Separator } from "@/components/ui/separator";
 import { ExternalLinkIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-export default async function LinkAccountPage({
-  params: { request },
-}: {
-  params: { request: string };
-}) {
+type Params = Promise<{ request: string }>;
+
+export default async function LinkAccountPage({ params }: { params: Params }) {
+  const { request } = await params;
+
   const entry = await db.query.linkRequests.findFirst({
     where: eq(linkRequests.token, request),
   });
@@ -41,7 +41,7 @@ export default async function LinkAccountPage({
           : Number(user.discriminator) % 5,
       );
 
-  const params = new URLSearchParams({
+  const searchParams = new URLSearchParams({
     response_type: "code",
     client_id: process.env.SPOTIFY_CLIENT_ID!,
     redirect_uri: process.env.SPOTIFY_REDIRECT_URI!,
@@ -49,7 +49,7 @@ export default async function LinkAccountPage({
     state: request,
     show_dialog: "true",
   });
-  const authorizeUrl = `https://accounts.spotify.com/authorize?${params.toString()}`;
+  const authorizeUrl = `https://accounts.spotify.com/authorize?${searchParams.toString()}`;
 
   return (
     <div className="relative flex h-full items-center justify-center">
@@ -58,8 +58,8 @@ export default async function LinkAccountPage({
           className="contents p-0 md:grid [&>div:first-child]:hidden md:[&>div:first-child]:block"
           color={["#444444", "#444444"]}
         >
-          <Card className="flex min-h-full w-full flex-col rounded-none md:min-h-[auto] md:max-w-md md:rounded-md">
-            <CardHeader className="flex items-center gap-4 bg-muted p-6">
+          <Card className="md:min-h-auto flex min-h-full w-full flex-col rounded-none md:max-w-md md:rounded-md">
+            <CardHeader className="bg-muted flex items-center gap-4 p-6">
               {/* Images */}
               <AnimatedUserIcon image={avatar} />
 
@@ -67,7 +67,7 @@ export default async function LinkAccountPage({
                 <div className="text-base font-medium md:text-lg">
                   Link your Spotify account
                 </div>
-                <p className="text-xs text-muted-foreground md:text-sm">
+                <p className="text-muted-foreground text-xs md:text-sm">
                   Connect your Spotify account to Spoticord, and listen to the
                   music you enjoy.
                 </p>
@@ -79,7 +79,7 @@ export default async function LinkAccountPage({
                   <div className="text-sm font-medium md:text-base">
                     We need some permissions first
                   </div>
-                  <p className="mt-2 text-sm text-muted-foreground md:text-base">
+                  <p className="text-muted-foreground mt-2 text-sm md:text-base">
                     Spoticord needs a few permissions from your Spotify account
                     to work its magic!
                   </p>
@@ -92,7 +92,7 @@ export default async function LinkAccountPage({
                     <div className="text-xs font-medium md:text-sm">
                       Read subscription details
                     </div>
-                    <p className="text-xs text-muted-foreground md:text-sm">
+                    <p className="text-muted-foreground text-xs md:text-sm">
                       Spoticord needs to be able to determine whether your
                       account has Spotify Premium, which is{" "}
                       <strong>required</strong> for Spoticord to function.
@@ -103,7 +103,7 @@ export default async function LinkAccountPage({
                     <div className="text-xs font-medium md:text-sm">
                       Control device playback
                     </div>
-                    <p className="text-xs text-muted-foreground md:text-sm">
+                    <p className="text-muted-foreground text-xs md:text-sm">
                       Spoticord needs to be able to create devices and control
                       their playback within your Spotify account to function.
                     </p>
@@ -113,7 +113,7 @@ export default async function LinkAccountPage({
                     <div className="text-xs font-medium md:text-sm">
                       Basic profile information
                     </div>
-                    <p className="text-xs text-muted-foreground md:text-sm">
+                    <p className="text-muted-foreground text-xs md:text-sm">
                       Spoticord needs to know your username to be able to
                       authenticate with Spotify servers.
                     </p>
