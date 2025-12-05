@@ -4,7 +4,7 @@ FROM node:20-alpine AS base
 
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat
-RUN corepack enable && corepack prepare pnpm@9.5.0 --activate
+RUN corepack enable && corepack prepare pnpm@10.14.0 --activate
 # Set the store dir to a folder that is not in the project
 RUN pnpm config set store-dir ~/.pnpm-store
 RUN pnpm fetch
